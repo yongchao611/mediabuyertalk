@@ -1,0 +1,25 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+
+const posts = (await Astro.glob('../../content/google-ads/*.md'))
+  .filter(p => !p.frontmatter.draft)
+  .sort((a, b) => new Date(b.frontmatter.pubDate).getTime() - new Date(a.frontmatter.pubDate).getTime());
+---
+
+<DocsLayout title="Google Ads - Affiliate Marketing 知识库" description="Google Ads 投放教程，包含搜索广告、展示广告和 Performance Max">
+  <section>
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">🔍 Google Ads</h1>
+      <p class="text-lg text-gray-600 dark:text-gray-400">Google Ads 搜索广告、展示广告和 Performance Max 投放教程</p>
+    </header>
+
+    {posts.length > 0 ? (
+      <div class="space-y-4">
+        {posts.map(post => <ArticleCard post={post} />)}
+      </div>
+    ) : (
+      <p class="text-center text-gray-500 py-12">即将更新，敬请期待</p>
+    )}
+  </section>
+</DocsLayout>

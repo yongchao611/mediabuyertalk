@@ -1,0 +1,27 @@
+---
+import NetworkCard from './NetworkCard.astro';
+
+interface Network {
+  name: string;
+  rating: number;
+  niche: string;
+  payout: string;
+  url: string;
+}
+
+interface Props {
+  networks: Network[];
+}
+
+const { networks } = Astro.props;
+---
+
+<section class="container mx-auto px-4 py-12">
+  <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">🏆 推荐联盟平台</h2>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    {networks.map(network => <NetworkCard network={network} />)}
+  </div>
+  <p class="text-center text-xs text-gray-400 dark:text-gray-500 mt-6">
+    📝 点击"注册"即可加入联盟，开始推广赚钱
+  </p>
+</section>

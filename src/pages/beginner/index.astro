@@ -1,0 +1,25 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+
+const posts = (await Astro.glob('../../content/beginner/*.md'))
+  .filter(p => !p.frontmatter.draft)
+  .sort((a, b) => (a.frontmatter.order || 999) - (b.frontmatter.order || 999));
+---
+
+<DocsLayout title="新手入门 - Affiliate Marketing 知识库" description="从零开始学习 Affiliate Marketing，包含基础概念、术语解释和入门路线">
+  <section>
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">🎓 新手入门</h1>
+      <p class="text-lg text-gray-600 dark:text-gray-400">从零开始，系统学习 Affiliate Marketing 的基础知识</p>
+    </header>
+
+    {posts.length > 0 ? (
+      <div class="space-y-4">
+        {posts.map(post => <ArticleCard post={post} />)}
+      </div>
+    ) : (
+      <p class="text-center text-gray-500 py-12">即将更新，敬请期待</p>
+    )}
+  </section>
+</DocsLayout>

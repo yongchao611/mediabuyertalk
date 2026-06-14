@@ -1,0 +1,37 @@
+---
+interface Props {
+  posts: any[];
+}
+
+const { posts } = Astro.props;
+
+// 从文件路径生成 URL
+function getUrl(post: any): string {
+  const fp = post.file || '';
+  const parts = fp.split('/');
+  const col = parts[parts.length - 2] || '';
+  const s = parts[parts.length - 1]?.replace('.md', '') || '';
+  return `/${col}/${s}/`;
+}
+---
+
+{posts.length > 0 && (
+  <section>
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">📎 相关文章</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {posts.map((post) => (
+        <a
+          href={getUrl(post)}
+          class="block bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-md transition-all duration-200"
+        >
+          <h3 class="font-semibold text-gray-900 dark:text-gray-100 mb-2 line-clamp-2 hover:text-blue-600 transition-colors">
+            {post.frontmatter.title}
+          </h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
+            {post.frontmatter.description}
+          </p>
+        </a>
+      ))}
+    </div>
+  </section>
+)}

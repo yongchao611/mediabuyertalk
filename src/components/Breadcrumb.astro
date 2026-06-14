@@ -1,0 +1,38 @@
+---
+interface Props {
+  category?: string;
+  title?: string;
+}
+
+const { category, title } = Astro.props;
+
+const categoryMap: Record<string, { label: string; href: string }> = {
+  'beginner': { label: '新手入门', href: '/beginner/' },
+  'facebook-ads': { label: 'Facebook Ads', href: '/facebook-ads/' },
+  'google-ads': { label: 'Google Ads', href: '/google-ads/' },
+  'top-offers': { label: 'TOP Offer', href: '/top-offers/' },
+  'top-networks': { label: 'TOP联盟', href: '/top-networks/' },
+  'landing-page-library': { label: 'LP库', href: '/landing-page-library/' },
+  'case-studies': { label: '实战案例', href: '/case-studies/' },
+  'tools': { label: '工具导航', href: '/tools/' },
+  'celebrities': { label: '名人介绍', href: '/celebrities/' },
+};
+
+const categoryInfo = category ? categoryMap[category] : null;
+---
+
+<nav class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6" aria-label="面包屑导航">
+  <a href="/" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">首页</a>
+  <span>/</span>
+  {categoryInfo ? (
+    <>
+      <a href={categoryInfo.href} class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+        {categoryInfo.label}
+      </a>
+      <span>/</span>
+      <span class="text-gray-900 dark:text-gray-100 font-medium truncate">{title || '...'}</span>
+    </>
+  ) : (
+    <span class="text-gray-900 dark:text-gray-100 font-medium">{title || '...'}</span>
+  )}
+</nav>

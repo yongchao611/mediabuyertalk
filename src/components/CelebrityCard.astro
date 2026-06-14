@@ -1,0 +1,50 @@
+---
+interface Props {
+  celebrity: any;
+}
+
+const { celebrity } = Astro.props;
+const { frontmatter } = celebrity;
+
+// Astro.glob 不提供 url，从 file 路径手动计算
+const filePath = celebrity.file || '';
+const pathParts = filePath.split('/');
+const collection = pathParts[pathParts.length - 2] || 'celebrities';
+const slug = pathParts[pathParts.length - 1]?.replace('.md', '') || '';
+const url = `/${collection}/${slug}/`;
+---
+
+<div class="bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-100 dark:border-gray-700 hover:border-orange-200 dark:hover:border-orange-600 hover:shadow-md transition-all duration-200">
+  <div class="flex items-center gap-4 mb-4">
+    <div class="w-14 h-14 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center text-2xl text-white font-bold flex-shrink-0">
+      {frontmatter.title?.charAt(0) || '⭐'}
+    </div>
+    <div class="min-w-0">
+      <h3 class="font-semibold text-gray-900 dark:text-gray-100 truncate">
+        <a href={url} class="hover:text-blue-600 transition-colors">{frontmatter.title}</a>
+      </h3>
+      {frontmatter.brand && (
+        <p class="text-sm text-gray-500 dark:text-gray-400">{frontmatter.brand}</p>
+      )}
+    </div>
+  </div>
+
+  {frontmatter.annual_income && (
+    <div class="mb-3 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg text-center">
+      <div class="text-lg font-bold text-green-600 dark:text-green-400">{frontmatter.annual_income}</div>
+      <div class="text-xs text-gray-500 dark:text-gray-400">年收入</div>
+    </div>
+  )}
+
+  <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-3 mb-3">{frontmatter.bio}</p>
+
+  {frontmatter.niche && (
+    <div class="flex flex-wrap gap-1">
+      {frontmatter.niche.map((n: string) => (
+        <span class="text-xs px-2 py-1 rounded bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
+          {n}
+        </span>
+      ))}
+    </div>
+  )}
+</div>

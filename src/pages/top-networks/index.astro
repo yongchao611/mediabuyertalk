@@ -1,0 +1,75 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+
+const networks = (await Astro.glob('../../content/top-networks/*.md'))
+  .filter(p => !p.frontmatter.draft)
+  .sort((a, b) => new Date(b.frontmatter.pubDate || 0).getTime() - new Date(a.frontmatter.pubDate || 0).getTime());
+---
+
+<DocsLayout title="TOP联盟 - Affiliate Marketing 知识库" description="靠谱联盟平台推荐，包含起付金额、支付周期和注册方式对比">
+  <section>
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">🏆 TOP联盟</h1>
+      <p class="text-lg text-gray-600 dark:text-gray-400">靠谱联盟平台推荐，选对平台少走弯路</p>
+    </header>
+
+    {networks.length > 0 ? (
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {networks.map(n => {
+          const fm = n.frontmatter;
+          const fp = n.file || '';
+          const parts = fp.split('/');
+          const col = parts[parts.length - 2] || 'top-networks';
+          const slug = parts[parts.length - 1]?.replace('.md', '') || '';
+
+          return (
+            <div class="group bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-600 hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
+              <!-- Logo + 名称 -->
+              <div class="flex items-center gap-3 mb-4">
+                {fm.icon ? (
+                  <img src={fm.icon} alt={fm.title} class="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
+                ) : (
+                  <span class="w-10 h-10 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-lg flex-shrink-0">🏆</span>
+                )}
+                <h3 class="font-bold text-gray-900 dark:text-gray-100 text-lg truncate">{fm.title}</h3>
+              </div>
+
+              <!-- 描述 -->
+              {fm.description && (
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-2">{fm.description}</p>
+              )}
+
+              <!-- 关键指标 -->
+              <div class="grid grid-cols-2 gap-3 mb-4 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                <div class="text-center">
+                  <div class="text-lg font-bold text-green-600 dark:text-green-400">{fm.min_payout || '-'}</div>
+                  <div class="text-xs text-gray-500 dark:text-gray-400">起付金额</div>
+                </div>
+                <div class="text-center">
+                  <div class="text-lg font-bold text-blue-600 dark:text-blue-400">{fm.payment_frequency || '-'}</div>
+                  <div class="text-xs text-gray-500 dark:text-gray-400">支付周期</div>
+                </div>
+              </div>
+
+              <!-- 注册按钮 -->
+              <a
+                href={fm.signup_url || '#'}
+                target="_blank"
+                rel="nofollow noopener"
+                class="block w-full text-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
+              >
+                立即注册 →
+              </a>
+            </div>
+          );
+        })}
+      </div>
+    ) : (
+      <div class="text-center py-16">
+        <div class="text-6xl mb-4">🏆</div>
+        <p class="text-gray-500 dark:text-gray-400 text-lg">即将更新，敬请期待</p>
+        <p class="text-gray-400 dark:text-gray-500 text-sm mt-2">正在整理最好的联盟平台</p>
+      </div>
+    )}
+  </section>
+</DocsLayout>

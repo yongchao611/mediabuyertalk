@@ -1,0 +1,77 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+
+const rawOffers = (await Astro.glob('../../content/top-offers/*.md'))
+  .filter(p => !p.frontmatter.draft)
+  .sort((a, b) => new Date(b.frontmatter.pubDate || 0).getTime() - new Date(a.frontmatter.pubDate || 0).getTime());
+
+// 从正文提取前 100 字符作为摘要
+function getExcerpt(body: string, maxLen = 100): string {
+  const text = body
+    .replace(/<[^>]+>/g, '')      // 去掉 HTML 标签
+    .replace(/[#*_`~>|\-\[\]()]/g, '') // 去掉 Markdown 符号
+    .replace(/\s+/g, ' ')         // 合并空白
+    .trim();
+  return text.length > maxLen ? text.slice(0, maxLen) + '...' : text;
+}
+
+const offers = rawOffers.map(o => {
+  let excerpt = '';
+  try {
+    if (typeof o.compiledContent === 'function') {
+      excerpt = getExcerpt(o.compiledContent());
+    }
+  } catch (e) {
+    excerpt = '';
+  }
+  return { ...o, excerpt };
+});
+---
+
+<DocsLayout title="TOP Offer - Affiliate Marketing 知识库" description="高转化 Offer 深度分析和数据拆解，包含 Sweepstakes、Finance、Utilities 等热门品类">
+  <section>
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">💰 TOP Offer</h1>
+      <p class="text-lg text-gray-600 dark:text-gray-400">高转化 Offer 深度分析和数据拆解，助你找到下一个爆款</p>
+    </header>
+
+    {offers.length > 0 ? (
+      <div class="space-y-4">
+        {offers.map(offer => {
+          const fm = offer.frontmatter;
+          const fp = offer.file || '';
+          const parts = fp.split('/');
+          const col = parts[parts.length - 2] || 'top-offers';
+          const slug = parts[parts.length - 1]?.replace('.md', '') || '';
+          const url = `/${col}/${slug}/`;
+
+          return (
+            <a
+              href={url}
+              class="block bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-600 hover:shadow-md transition-all duration-200"
+            >
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                {fm.title}
+              </h3>
+              {offer.excerpt && (
+                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
+                  {offer.excerpt}
+                </p>
+              )}
+              <div class="flex flex-wrap gap-3 mt-3 text-xs text-gray-400 dark:text-gray-500">
+                {fm.pubDate && <span>📅 {new Date(fm.pubDate).toLocaleDateString('zh-CN')}</span>}
+                {fm.readTime && <span>📖 {fm.readTime}分钟</span>}
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    ) : (
+      <div class="text-center py-16">
+        <div class="text-6xl mb-4">💰</div>
+        <p class="text-gray-500 dark:text-gray-400 text-lg">即将更新，敬请期待</p>
+        <p class="text-gray-400 dark:text-gray-500 text-sm mt-2">正在收集高转化 Offer 数据</p>
+      </div>
+    )}
+  </section>
+</DocsLayout>

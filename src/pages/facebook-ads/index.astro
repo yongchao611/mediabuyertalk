@@ -1,0 +1,25 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+
+const posts = (await Astro.glob('../../content/facebook-ads/*.md'))
+  .filter(p => !p.frontmatter.draft)
+  .sort((a, b) => new Date(b.frontmatter.pubDate).getTime() - new Date(a.frontmatter.pubDate).getTime());
+---
+
+<DocsLayout title="Facebook Ads - Affiliate Marketing 知识库" description="Facebook 广告投放完整攻略，包含账户安全、受众定位、广告结构、ABO vs CBO 等">
+  <section>
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">📘 Facebook Ads</h1>
+      <p class="text-lg text-gray-600 dark:text-gray-400">Facebook 广告投放的完整攻略，从账户安全到高级优化策略</p>
+    </header>
+
+    {posts.length > 0 ? (
+      <div class="space-y-4">
+        {posts.map(post => <ArticleCard post={post} />)}
+      </div>
+    ) : (
+      <p class="text-center text-gray-500 py-12">即将更新，敬请期待</p>
+    )}
+  </section>
+</DocsLayout>

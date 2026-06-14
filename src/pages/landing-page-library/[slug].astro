@@ -1,0 +1,58 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await Astro.glob('../../content/landing-page-library/*.md');
+  return posts.map(post => ({
+    params: { slug: post.file.split('/').pop()?.replace('.md', '') },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { frontmatter } = post;
+const { Content } = post;
+---
+
+<DocsLayout
+  title={`${frontmatter.title} - LP库 - Affiliate Marketing 知识库`}
+  description={frontmatter.seo_description || frontmatter.description}
+  pubDate={frontmatter.pubDate}
+  readTime={frontmatter.readTime}
+  category="landing-page-library"
+>
+  <!-- 封面图片 -->
+  {frontmatter.image && (
+    <img src={frontmatter.image} alt={frontmatter.title} class="w-full h-64 object-cover rounded-xl mb-6" />
+  )}
+
+  <!-- 下载区域 -->
+  {frontmatter.download_file && (
+    <div class="mb-8 p-6 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 rounded-xl border border-green-200 dark:border-green-800">
+      <div class="flex items-center gap-4 flex-wrap">
+        <div class="text-4xl">📦</div>
+        <div class="flex-1 min-w-0">
+          <h3 class="font-bold text-lg text-gray-900 dark:text-gray-100">LP 源文件下载</h3>
+          <p class="text-sm text-gray-600 dark:text-gray-400 truncate">
+            {frontmatter.download_file.split('/').pop()}
+          </p>
+          <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">
+            下载后可导入到你的 LP 构建工具中使用
+          </p>
+        </div>
+        <a
+          href={frontmatter.download_file}
+          download
+          class="inline-flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors shadow-sm"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          下载 LP 压缩包
+        </a>
+      </div>
+    </div>
+  )}
+
+  <Content />
+</DocsLayout>

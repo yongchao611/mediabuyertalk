@@ -1,0 +1,107 @@
+---
+import DocsLayout from '../layouts/DocsLayout.astro';
+import SearchBar from '../components/SearchBar.astro';
+
+// 获取所有文章用于搜索
+const allPosts = [
+  ...(await Astro.glob('../content/beginner/*.md')),
+  ...(await Astro.glob('../content/facebook-ads/*.md')),
+  ...(await Astro.glob('../content/google-ads/*.md')),
+  ...(await Astro.glob('../content/top-offers/*.md')),
+  ...(await Astro.glob('../content/landing-page-library/*.md')),
+  ...(await Astro.glob('../content/case-studies/*.md')),
+  ...(await Astro.glob('../content/tools/*.md')),
+  ...(await Astro.glob('../content/celebrities/*.md')),
+];
+
+const posts = allPosts.filter((p: any) => !p.frontmatter.draft);
+const query = Astro.url.searchParams.get('q') || '';
+
+// 预序列化文章数据用于客户端搜索（从 file 路径计算 url）
+const postsDataJson = JSON.stringify(posts.map(p => {
+  const parts = (p.file || '').split('/');
+  const col = parts[parts.length - 2] || '';
+  const s = parts[parts.length - 1]?.replace('.md', '') || '';
+  return {
+    title: p.frontmatter.title,
+    description: p.frontmatter.description || '',
+    url: `/${col}/${s}/`,
+    collection: col,
+    pubDate: p.frontmatter.pubDate,
+    readTime: p.frontmatter.readTime,
+  };
+}));
+---
+
+<DocsLayout title="搜索文章 - Affiliate Marketing 知识库" description="搜索 Affiliate Marketing 知识库中的所有文章">
+  <section>
+    <div class="mb-8">
+      <SearchBar />
+    </div>
+
+    <div id="search-results">
+      {query ? (
+        <div>
+          <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+            搜索: "<span class="text-blue-600">{query}</span>"
+          </h2>
+          <div id="results-list" class="space-y-4">
+            <!-- 结果通过客户端 JS 渲染 -->
+          </div>
+          <p id="no-results" class="hidden text-center text-gray-500 dark:text-gray-400 py-8">
+            没有找到相关文章，请尝试其他关键词
+          </p>
+        </div>
+      ) : (
+        <div>
+          <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">🔍 搜索文章</h2>
+          <p class="text-gray-500 dark:text-gray-400 mb-4">请输入关键词搜索您感兴趣的内容</p>
+        </div>
+      )}
+    </div>
+
+    <!-- 热门搜索关键词 -->
+    <div class="mt-12">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">🔥 热门搜索</h3>
+      <div class="flex flex-wrap gap-2">
+        {['Facebook Ads', 'Sweepstakes', '追踪器', 'LP制作', 'Google Ads', 'Offer选择', 'ROI优化', 'Mobipium'].map(keyword => (
+          <a
+            href={`/search/?q=${encodeURIComponent(keyword)}`}
+            class="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:text-blue-600 transition-colors"
+          >
+            {keyword}
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</DocsLayout>
+
+<script>
+  var postsData = {postsDataJson};
+  var q = new URLSearchParams(window.location.search).get('q') || '';
+  var resultsList = document.getElementById('results-list');
+  var noResults = document.getElementById('no-results');
+
+  if (q && resultsList) {
+    var lq = q.toLowerCase();
+    var results = postsData.filter(function(p) {
+      return p.title.toLowerCase().indexOf(lq) !== -1 ||
+        p.description.toLowerCase().indexOf(lq) !== -1;
+    });
+
+    if (results.length === 0) {
+      if (noResults) noResults.classList.remove('hidden');
+    } else {
+      for (var i = 0; i < results.length; i++) {
+        var p = results[i];
+        var div = document.createElement('div');
+        div.className = 'bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-100 dark:border-gray-700';
+        var pubStr = p.pubDate ? '<span>📅 ' + new Date(p.pubDate).toLocaleDateString('zh-CN') + '</span>' : '';
+        var readStr = p.readTime ? '<span>📖 ' + p.readTime + '分钟</span>' : '';
+        div.innerHTML = '<h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2"><a href="' + p.url + '" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">' + p.title + '</a></h3><p class="text-gray-600 dark:text-gray-400 text-sm mb-3">' + p.description + '</p><div class="flex gap-4 text-xs text-gray-400 dark:text-gray-500">' + pubStr + readStr + '</div>';
+        resultsList.appendChild(div);
+      }
+    }
+  }
+</script>

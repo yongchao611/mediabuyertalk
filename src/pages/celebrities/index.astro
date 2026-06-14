@@ -1,0 +1,24 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+import CelebrityCard from '../../components/CelebrityCard.astro';
+
+const celebrities = (await Astro.glob('../../content/celebrities/*.md'))
+  .filter(p => !p.frontmatter.draft);
+---
+
+<DocsLayout title="名人介绍 - Affiliate Marketing 知识库" description="行业知名大咖的生平和经验分享，包含 Pat Flynn、Spencer Haws 等">
+  <section>
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">⭐ 名人介绍</h1>
+      <p class="text-lg text-gray-600 dark:text-gray-400">了解行业大咖的成长之路和成功经验</p>
+    </header>
+
+    {celebrities.length > 0 ? (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {celebrities.map(celeb => <CelebrityCard celebrity={celeb} />)}
+      </div>
+    ) : (
+      <p class="text-center text-gray-500 py-12">即将更新，敬请期待</p>
+    )}
+  </section>
+</DocsLayout>

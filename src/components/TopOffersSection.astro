@@ -1,0 +1,27 @@
+---
+import OfferCard from './OfferCard.astro';
+
+interface Props {
+  offers: any[];
+}
+
+const { offers } = Astro.props;
+---
+
+<section class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 py-12">
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">💰 TOP Offer 精选</h2>
+      <a href="/top-offers/" class="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium">
+        查看全部 →
+      </a>
+    </div>
+    {offers.length > 0 ? (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {offers.map(offer => <OfferCard offer={offer} />)}
+      </div>
+    ) : (
+      <p class="text-center text-gray-500 dark:text-gray-400 py-8">暂无 Offer 数据，敬请期待</p>
+    )}
+  </div>
+</section>

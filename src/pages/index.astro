@@ -1,0 +1,111 @@
+---
+import HomeLayout from '../layouts/HomeLayout.astro';
+import ModuleCard from '../components/ModuleCard.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import SearchBar from '../components/SearchBar.astro';
+import TopOffersSection from '../components/TopOffersSection.astro';
+import TopNetworks from '../components/TopNetworks.astro';
+import CelebritiesSection from '../components/CelebritiesSection.astro';
+
+// 9个核心学习模块
+const modules = [
+  { icon: '🎓', title: '新手入门', desc: '从零开始', count: '8篇文章', href: '/beginner/' },
+  { icon: '📘', title: 'Facebook Ads', desc: '投放全攻略', count: '6篇文章', href: '/facebook-ads/' },
+  { icon: '🔍', title: 'Google Ads', desc: '搜索/展示/Pmax', count: '5篇文章', href: '/google-ads/' },
+  { icon: '💰', title: 'TOP Offer', desc: '高转化分析', count: '10篇文章', href: '/top-offers/' },
+  { icon: '🏆', title: 'TOP联盟', desc: '平台推荐', count: '6个平台', href: '/top-networks/' },
+  { icon: '📄', title: 'LP库', desc: '落地页拆解', count: '5篇文章', href: '/landing-page-library/' },
+  { icon: '📊', title: '实战案例', desc: '真实数据', count: '8篇文章', href: '/case-studies/' },
+  { icon: '🛠️', title: '工具导航', desc: '必备工具', count: '12篇文章', href: '/tools/' },
+  { icon: '⭐', title: '名人介绍', desc: '行业大咖', count: '5篇文章', href: '/celebrities/' },
+];
+
+// 获取所有内容并混合为最新文章
+const allPosts = [
+  ...(await Astro.glob('../content/beginner/*.md')),
+  ...(await Astro.glob('../content/facebook-ads/*.md')),
+  ...(await Astro.glob('../content/google-ads/*.md')),
+  ...(await Astro.glob('../content/top-offers/*.md')),
+  ...(await Astro.glob('../content/landing-page-library/*.md')),
+  ...(await Astro.glob('../content/case-studies/*.md')),
+  ...(await Astro.glob('../content/tools/*.md')),
+  ...(await Astro.glob('../content/celebrities/*.md')),
+];
+
+const latestPosts = allPosts
+  .filter((p: any) => !p.frontmatter.draft)
+  .sort((a: any, b: any) => new Date(b.frontmatter.pubDate).getTime() - new Date(a.frontmatter.pubDate).getTime())
+  .slice(0, 5);
+
+// TOP Offer (按排名排序)
+const topOffers = await Astro.glob('../content/top-offers/*.md');
+const topOffersList = topOffers
+  .filter((o: any) => !o.frontmatter.draft)
+  .sort((a: any, b: any) => (a.frontmatter.current_rank || 999) - (b.frontmatter.current_rank || 999))
+  .slice(0, 4);
+
+// 推荐联盟平台
+const networks = [
+  { name: 'Mobipium', rating: 4.8, niche: 'Sweepstakes', payout: 'Net7 | $50起付', url: '/top-networks/mobipium-review/' },
+  { name: 'AdCombo', rating: 4.6, niche: 'Nutra', payout: 'Net14 | $100起付', url: 'https://adcombo.com/' },
+  { name: 'CrakRevenue', rating: 4.5, niche: 'Dating', payout: 'Weekly | $50起付', url: 'https://crakrevenue.com/' },
+  { name: 'MaxBounty', rating: 4.4, niche: 'General', payout: 'Net30 | $100起付', url: 'https://maxbounty.com/' },
+];
+
+// 名人
+const celebrities = await Astro.glob('../content/celebrities/*.md');
+const celebritiesList = celebrities.filter((c: any) => !c.frontmatter.draft).slice(0, 4);
+---
+
+<HomeLayout title="Affiliate Marketing 知识库 - 从0到1的系统教程" description="面向 Affiliate Marketer 的免费知识库，包含从0到1的系统化教程、实战案例拆解、高转化Offer分析、Facebook/Google广告投放指南">
+  <!-- Hero 区域 -->
+  <section class="bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-blue-950 py-16 md:py-24 px-4">
+    <div class="container mx-auto max-w-4xl text-center">
+      <h1 class="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 leading-tight">
+        🎓 Affiliate Marketing 知识库
+      </h1>
+      <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8">
+        从0到1的系统化教程 | 实战案例拆解 | 高转化Offer分析
+      </p>
+
+      <!-- 搜索框 -->
+      <div class="mb-6">
+        <SearchBar />
+      </div>
+
+      <p class="text-sm text-gray-400 dark:text-gray-500">已有 60+ 篇深度内容，持续更新中</p>
+    </div>
+  </section>
+
+  <!-- 核心学习模块 -->
+  <section class="container mx-auto px-4 py-12">
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">📚 学习模块</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-9 gap-3">
+      {modules.map(module => <ModuleCard {...module} />)}
+    </div>
+  </section>
+
+  <!-- 最新文章 -->
+  <section class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">📝 最新文章</h2>
+      <a href="/beginner/" class="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium">查看全部 →</a>
+    </div>
+    {latestPosts.length > 0 ? (
+      <div class="space-y-4">
+        {latestPosts.map(post => <ArticleCard post={post} />)}
+      </div>
+    ) : (
+      <p class="text-center text-gray-500 dark:text-gray-400 py-8">即将发布第一篇文章，敬请期待！</p>
+    )}
+  </section>
+
+  <!-- TOP Offer 精选 -->
+  {topOffersList.length > 0 && <TopOffersSection offers={topOffersList} />}
+
+  <!-- 行业大咖 -->
+  <CelebritiesSection celebrities={celebritiesList} />
+
+  <!-- 推荐联盟平台 -->
+  <TopNetworks networks={networks} />
+</HomeLayout>

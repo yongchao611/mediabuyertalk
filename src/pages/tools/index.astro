@@ -1,0 +1,125 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+
+const tools = (await Astro.glob('../../content/tools/*.md'))
+  .filter(p => !p.frontmatter.draft)
+  .sort((a, b) => new Date(b.frontmatter.pubDate || 0).getTime() - new Date(a.frontmatter.pubDate || 0).getTime());
+
+const categoryLabels: Record<string, { label: string; emoji: string }> = {
+  tracking: { label: '追踪工具', emoji: '📊' },
+  'lp-builder': { label: 'LP构建', emoji: '🏗️' },
+  ai: { label: 'AI工具', emoji: '🤖' },
+  creative: { label: '创意工具', emoji: '🎨' },
+  research: { label: '研究工具', emoji: '🔬' },
+  spy: { label: 'Spy工具', emoji: '👁️' },
+  hosting: { label: '托管服务', emoji: '☁️' },
+  other: { label: '其他', emoji: '📦' },
+};
+
+const priceLabels: Record<string, { label: string; color: string }> = {
+  free: { label: '免费', color: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' },
+  freemium: { label: '免费增值', color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' },
+  paid: { label: '付费', color: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' },
+};
+
+// 按分类分组
+const grouped: Record<string, typeof tools> = {};
+tools.forEach(t => {
+  const cat = t.frontmatter.category || 'other';
+  if (!grouped[cat]) grouped[cat] = [];
+  grouped[cat].push(t);
+});
+---
+
+<DocsLayout title="工具导航 - Affiliate Marketing 知识库" description="Affiliate Marketing 必备工具推荐，包含追踪器、LP构建器、AI工具等">
+  <section>
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">🛠️ 工具导航</h1>
+      <p class="text-lg text-gray-600 dark:text-gray-400">追踪器、LP构建器、AI工具、Spy工具...你需要的都在这里</p>
+    </header>
+
+    {tools.length > 0 ? (
+      <div class="space-y-10">
+        {Object.entries(grouped).map(([catKey, items]) => {
+          const catInfo = categoryLabels[catKey] || categoryLabels.other;
+          return (
+            <div>
+              <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
+                <span>{catInfo.emoji}</span>
+                <span>{catInfo.label}</span>
+                <span class="text-sm font-normal text-gray-400">({items.length})</span>
+              </h2>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {items.map(tool => {
+                  const fm = tool.frontmatter;
+                  // 从文件路径计算 URL
+                  const fp = tool.file || '';
+                  const fpParts = fp.split('/');
+                  const tCol = fpParts[fpParts.length - 2] || 'tools';
+                  const tSlug = fpParts[fpParts.length - 1]?.replace('.md', '') || '';
+                  const price = priceLabels[fm.price] || priceLabels.freemium;
+                  const stars = fm.rating ? '⭐'.repeat(Math.floor(fm.rating)) : '';
+                  return (
+                    <a
+                      href={`/${tCol}/${tSlug}/`}
+                      class="group block bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-600 hover:shadow-lg hover:-translate-y-1 transition-all duration-200"
+                    >
+                      <!-- 图标 -->
+                      <div class="text-4xl mb-3 group-hover:scale-110 transition-transform">
+                        {fm.icon || '🛠️'}
+                      </div>
+
+                      <!-- 名称 + 价格标签 -->
+                      <div class="flex items-start justify-between gap-2 mb-2">
+                        <h3 class="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1">
+                          {fm.title}
+                        </h3>
+                        <span class={`shrink-0 text-xs px-2 py-0.5 rounded-full font-medium ${price.color}`}>
+                          {price.label}
+                        </span>
+                      </div>
+
+                      <!-- 描述 -->
+                      <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-3">
+                        {fm.description || ''}
+                      </p>
+
+                      <!-- 评分 + 链接 -->
+                      <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-1">
+                          {fm.rating ? (
+                            <>
+                              <span class="text-yellow-400 text-sm">{stars}</span>
+                              <span class="text-xs text-gray-400 font-medium">{fm.rating}</span>
+                            </>
+                          ) : (
+                            <span class="text-xs text-gray-400">暂无评分</span>
+                          )}
+                        </div>
+                        <span class="text-xs text-blue-600 dark:text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                          查看详情 →
+                        </span>
+                      </div>
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    ) : (
+      <div class="text-center py-16">
+        <div class="text-6xl mb-4">🛠️</div>
+        <p class="text-gray-500 dark:text-gray-400 text-lg">即将上线，敬请期待</p>
+        <p class="text-gray-400 dark:text-gray-500 text-sm mt-2">我们正在整理最好的工具推荐</p>
+      </div>
+    )}
+
+    <!-- 底部 CTA -->
+    <div class="mt-12 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 rounded-xl text-center">
+      <p class="text-gray-600 dark:text-gray-300 mb-2">💡 有推荐的工具？</p>
+      <p class="text-sm text-gray-500 dark:text-gray-400">欢迎联系我们推荐好用的工具，帮助更多 Affiliate 提升效率</p>
+    </div>
+  </section>
+</DocsLayout>
