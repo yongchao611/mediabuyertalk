@@ -2,7 +2,7 @@
 import DocsLayout from '../../layouts/DocsLayout.astro';
 
 export async function getStaticPaths() {
-  const modules = import.meta.glob('../../content/top-offers/*.md');
+  const modules = import.meta.glob('../../content/wechat/*.md');
   const entries = Object.entries(modules);
   if (entries.length === 0) return [];
   const posts = await Promise.all(entries.map(async ([file, loader]) => {
@@ -17,7 +17,7 @@ const { frontmatter } = post;
 const { Content } = post;
 ---
 
-<DocsLayout title={frontmatter.title} description={frontmatter.description || frontmatter.title} pubDate={frontmatter.pubDate} readTime={frontmatter.readTime} category="top-offers">
+<DocsLayout title={frontmatter.title} description={frontmatter.description || frontmatter.title} pubDate={frontmatter.pubDate} readTime={frontmatter.readTime} category="wechat">
   {frontmatter.image && <img src={frontmatter.image} alt={frontmatter.title} class="w-full max-h-80 object-cover rounded-xl mb-6" />}
   <Content />
 </DocsLayout>

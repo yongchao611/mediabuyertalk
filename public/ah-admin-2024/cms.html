@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CMS</title></head>
+<body>
+<script>window.CMS_MANUAL_INIT=true;</script>
+<script src="https://unpkg.com/decap-cms@3.13.0/dist/decap-cms.js"></script>
+<script>
+if(sessionStorage.getItem('a')!=='1'){location.href='/ah-admin-2024/';}
+CMS.init({config:{
+  backend:{name:'github',repo:'yongchao611/mediabuyertalk',branch:'master',base_url:'https://api.oauthathon.com'},
+  media_folder:'public/images',public_folder:'/images',locale:'zh_Hans',
+  collections:[
+    {name:'beginner',label:'新手入门',label_singular:'文章',folder:'src/content/beginner',create:true,slug:'{{slug}}',fields:[
+      {label:'置顶',name:'pinned',widget:'boolean',default:false,required:false},
+      {label:'标题',name:'title',widget:'string'},{label:'发布日期',name:'pubDate',widget:'datetime',format:'YYYY-MM-DD',time_format:false,default:''},
+      {label:'作者',name:'author',widget:'string',default:'Simon611'},{label:'封面图片',name:'image',widget:'image',required:false},
+      {label:'正文',name:'body',widget:'markdown'}
+    ]},
+    {name:'facebook-ads',label:'Facebook Ads',label_singular:'文章',folder:'src/content/facebook-ads',create:true,slug:'{{slug}}',fields:[
+      {label:'置顶',name:'pinned',widget:'boolean',default:false,required:false},{label:'标题',name:'title',widget:'string'},
+      {label:'发布日期',name:'pubDate',widget:'datetime',format:'YYYY-MM-DD',time_format:false,default:''},
+      {label:'作者',name:'author',widget:'string',default:'Simon611'},{label:'封面图片',name:'image',widget:'image',required:false},
+      {label:'正文',name:'body',widget:'markdown'}
+    ]},
+    {name:'google-ads',label:'Google Ads',label_singular:'文章',folder:'src/content/google-ads',create:true,slug:'{{slug}}',fields:[
+      {label:'置顶',name:'pinned',widget:'boolean',default:false,required:false},{label:'标题',name:'title',widget:'string'},
+      {label:'发布日期',name:'pubDate',widget:'datetime',format:'YYYY-MM-DD',time_format:false,default:''},
+      {label:'作者',name:'author',widget:'string',default:'Simon611'},{label:'封面图片',name:'image',widget:'image',required:false},
+      {label:'正文',name:'body',widget:'markdown'}
+    ]},
+    {name:'top-offers',label:'TOP Offer',label_singular:'Offer',folder:'src/content/top-offers',create:true,slug:'{{slug}}',fields:[
+      {label:'置顶',name:'pinned',widget:'boolean',default:false,required:false},{label:'标题',name:'title',widget:'string'},
+      {label:'发布日期',name:'pubDate',widget:'datetime',format:'YYYY-MM-DD',time_format:false,default:''},
+      {label:'作者',name:'author',widget:'string',default:'Simon611'},{label:'封面图片',name:'image',widget:'image',required:false},
+      {label:'正文',name:'body',widget:'markdown'}
+    ]},
+    {name:'top-networks',label:'TOP联盟',label_singular:'联盟',folder:'src/content/top-networks',create:true,slug:'{{slug}}',fields:[
+      {label:'联盟名称',name:'title',widget:'string'},{label:'Logo图标',name:'icon',widget:'image',hint:'上传Logo'},
+      {label:'起付金额',name:'min_payout',widget:'string',hint:'如 $50'},
+      {label:'支付周期',name:'payment_frequency',widget:'string',hint:'如 Net7'},
+      {label:'注册链接',name:'signup_url',widget:'string'},{label:'描述',name:'description',widget:'text'}
+    ]},
+    {name:'celebrities',label:'名人介绍',label_singular:'名人',folder:'src/content/celebrities',create:true,slug:'{{slug}}',fields:[
+      {label:'姓名',name:'title',widget:'string'},{label:'发布日期',name:'pubDate',widget:'datetime',format:'YYYY-MM-DD',time_format:false,default:''},
+      {label:'作者',name:'author',widget:'string',default:'Simon611'},{label:'封面图片',name:'image',widget:'image',required:false},
+      {label:'正文',name:'body',widget:'markdown'}
+    ]},
+    {name:'wechat',label:'公众号文章',label_singular:'文章',folder:'src/content/wechat',create:true,slug:'{{slug}}',fields:[
+      {label:'置顶',name:'pinned',widget:'boolean',default:false,required:false},{label:'标题',name:'title',widget:'string'},
+      {label:'发布日期',name:'pubDate',widget:'datetime',format:'YYYY-MM-DD',time_format:false,default:''},
+      {label:'作者',name:'author',widget:'string',default:'Simon611'},{label:'封面图片',name:'image',widget:'image',required:false},
+      {label:'正文',name:'body',widget:'markdown'}
+    ]},
+    {name:'case-studies',label:'实战案例',label_singular:'案例',folder:'src/content/case-studies',create:true,slug:'{{slug}}',fields:[
+      {label:'置顶',name:'pinned',widget:'boolean',default:false,required:false},{label:'标题',name:'title',widget:'string'},
+      {label:'发布日期',name:'pubDate',widget:'datetime',format:'YYYY-MM-DD',time_format:false,default:''},
+      {label:'作者',name:'author',widget:'string',default:'Simon611'},{label:'封面图片',name:'image',widget:'image',required:false},
+      {label:'正文',name:'body',widget:'markdown'}
+    ]},
+    {name:'tools',label:'工具导航',label_singular:'工具',folder:'src/content/tools',create:true,slug:'{{slug}}',fields:[
+      {label:'工具名称',name:'title',widget:'string'},{label:'发布日期',name:'pubDate',widget:'datetime',format:'YYYY-MM-DD',time_format:false,default:''},
+      {label:'作者',name:'author',widget:'string',default:'Simon611'},{label:'封面图片',name:'image',widget:'image',required:false},
+      {label:'正文',name:'body',widget:'markdown'}
+    ]},
+    {name:'landing-page-library',label:'LP库',label_singular:'LP',folder:'src/content/landing-page-library',create:true,slug:'{{slug}}',fields:[
+      {label:'置顶',name:'pinned',widget:'boolean',default:false,required:false},{label:'标题',name:'title',widget:'string'},
+      {label:'发布日期',name:'pubDate',widget:'datetime',format:'YYYY-MM-DD',time_format:false,default:''},
+      {label:'作者',name:'author',widget:'string',default:'Simon611'},{label:'封面图片',name:'image',widget:'image',required:false},
+      {label:'LP压缩包(.zip)',name:'download_file',widget:'file',required:false,hint:'上传ZIP'},
+      {label:'正文',name:'body',widget:'markdown'}
+    ]}
+  ]
+}});
+</script>
+</body>
+</html>

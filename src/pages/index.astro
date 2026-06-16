@@ -1,111 +1,116 @@
 ---
 import HomeLayout from '../layouts/HomeLayout.astro';
-import ModuleCard from '../components/ModuleCard.astro';
-import ArticleCard from '../components/ArticleCard.astro';
-import SearchBar from '../components/SearchBar.astro';
-import TopOffersSection from '../components/TopOffersSection.astro';
-import TopNetworks from '../components/TopNetworks.astro';
-import CelebritiesSection from '../components/CelebritiesSection.astro';
 
-// 9个核心学习模块
-const modules = [
-  { icon: '🎓', title: '新手入门', desc: '从零开始', count: '8篇文章', href: '/beginner/' },
-  { icon: '📘', title: 'Facebook Ads', desc: '投放全攻略', count: '6篇文章', href: '/facebook-ads/' },
-  { icon: '🔍', title: 'Google Ads', desc: '搜索/展示/Pmax', count: '5篇文章', href: '/google-ads/' },
-  { icon: '💰', title: 'TOP Offer', desc: '高转化分析', count: '10篇文章', href: '/top-offers/' },
-  { icon: '🏆', title: 'TOP联盟', desc: '平台推荐', count: '6个平台', href: '/top-networks/' },
-  { icon: '📄', title: 'LP库', desc: '落地页拆解', count: '5篇文章', href: '/landing-page-library/' },
-  { icon: '📊', title: '实战案例', desc: '真实数据', count: '8篇文章', href: '/case-studies/' },
-  { icon: '🛠️', title: '工具导航', desc: '必备工具', count: '12篇文章', href: '/tools/' },
-  { icon: '⭐', title: '名人介绍', desc: '行业大咖', count: '5篇文章', href: '/celebrities/' },
-];
+// 安全加载所有内容（import.meta.glob 需静态字符串，不能动态拼接）
+const allModules = {
+  ...import.meta.glob('../content/beginner/*.md', { eager: true }),
+  ...import.meta.glob('../content/facebook-ads/*.md', { eager: true }),
+  ...import.meta.glob('../content/google-ads/*.md', { eager: true }),
+  ...import.meta.glob('../content/top-offers/*.md', { eager: true }),
+  ...import.meta.glob('../content/top-networks/*.md', { eager: true }),
+  ...import.meta.glob('../content/landing-page-library/*.md', { eager: true }),
+  ...import.meta.glob('../content/case-studies/*.md', { eager: true }),
+  ...import.meta.glob('../content/tools/*.md', { eager: true }),
+  ...import.meta.glob('../content/celebrities/*.md', { eager: true }),
+  ...import.meta.glob('../content/wechat/*.md', { eager: true }),
+};
+const all = Object.values(allModules).filter((p: any) => p?.frontmatter);
 
-// 获取所有内容并混合为最新文章
-const allPosts = [
-  ...(await Astro.glob('../content/beginner/*.md')),
-  ...(await Astro.glob('../content/facebook-ads/*.md')),
-  ...(await Astro.glob('../content/google-ads/*.md')),
-  ...(await Astro.glob('../content/top-offers/*.md')),
-  ...(await Astro.glob('../content/landing-page-library/*.md')),
-  ...(await Astro.glob('../content/case-studies/*.md')),
-  ...(await Astro.glob('../content/tools/*.md')),
-  ...(await Astro.glob('../content/celebrities/*.md')),
-];
+const PER_PAGE = 10;
+const posts = all.filter((p: any) => !p.frontmatter.draft)
+  .sort((a: any, b: any) => {
+    const aPin = a.frontmatter.pinned ? 1 : 0;
+    const bPin = b.frontmatter.pinned ? 1 : 0;
+    if (aPin !== bPin) return bPin - aPin;
+    return new Date(b.frontmatter.pubDate || 0).getTime() - new Date(a.frontmatter.pubDate || 0).getTime();
+  });
+const totalPages = Math.ceil(posts.length / PER_PAGE);
 
-const latestPosts = allPosts
-  .filter((p: any) => !p.frontmatter.draft)
-  .sort((a: any, b: any) => new Date(b.frontmatter.pubDate).getTime() - new Date(a.frontmatter.pubDate).getTime())
-  .slice(0, 5);
-
-// TOP Offer (按排名排序)
-const topOffers = await Astro.glob('../content/top-offers/*.md');
-const topOffersList = topOffers
-  .filter((o: any) => !o.frontmatter.draft)
-  .sort((a: any, b: any) => (a.frontmatter.current_rank || 999) - (b.frontmatter.current_rank || 999))
-  .slice(0, 4);
-
-// 推荐联盟平台
-const networks = [
-  { name: 'Mobipium', rating: 4.8, niche: 'Sweepstakes', payout: 'Net7 | $50起付', url: '/top-networks/mobipium-review/' },
-  { name: 'AdCombo', rating: 4.6, niche: 'Nutra', payout: 'Net14 | $100起付', url: 'https://adcombo.com/' },
-  { name: 'CrakRevenue', rating: 4.5, niche: 'Dating', payout: 'Weekly | $50起付', url: 'https://crakrevenue.com/' },
-  { name: 'MaxBounty', rating: 4.4, niche: 'General', payout: 'Net30 | $100起付', url: 'https://maxbounty.com/' },
-];
-
-// 名人
-const celebrities = await Astro.glob('../content/celebrities/*.md');
-const celebritiesList = celebrities.filter((c: any) => !c.frontmatter.draft).slice(0, 4);
+const avatarColors: Record<string, string> = {
+  'beginner': 'bg-blue-50 text-blue-600', 'facebook-ads': 'bg-indigo-50 text-indigo-600',
+  'google-ads': 'bg-red-50 text-red-600', 'top-offers': 'bg-emerald-50 text-emerald-600',
+  'top-networks': 'bg-purple-50 text-purple-600', 'landing-page-library': 'bg-amber-50 text-amber-600',
+  'case-studies': 'bg-pink-50 text-pink-600', 'tools': 'bg-teal-50 text-teal-600',
+  'celebrities': 'bg-orange-50 text-orange-600', 'wechat': 'bg-green-50 text-green-600',
+};
+const catLabels: Record<string, string> = {
+  'beginner': '入门','facebook-ads': 'Facebook','google-ads': 'Google','top-offers': 'Offer',
+  'top-networks': '联盟','landing-page-library': 'LP库','case-studies': '案例','tools': '工具',
+  'celebrities': '名人','wechat': '公众号',
+};
+const icons: Record<string, string> = {
+  'beginner': '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-6H9v-2h4v8h-2zm1-10a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" fill="currentColor"/>',
+  'facebook-ads': '<path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z" fill="currentColor"/>',
+  'google-ads': '<path d="M21.8 10.5H12.2V13.5H17.7C17.15 15.65 15.25 17 12.75 17C9.85 17 7.5 14.65 7.5 11.75C7.5 8.85 9.85 6.5 12.75 6.5C14.05 6.5 15.25 7 16.15 7.85L18.3 5.7C16.85 4.35 14.9 3.5 12.75 3.5C8.25 3.5 4.5 7.25 4.5 11.75C4.5 16.25 8.25 20 12.75 20C16.85 20 20.35 17.15 20.35 11.75C20.35 11.25 20.3 10.85 20.2 10.5H21.8Z" fill="currentColor"/>',
+  'top-offers': '<path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6.4-4.8-6.4 4.8 2.4-7.2-6-4.8h7.6z" fill="currentColor"/>',
+  'top-networks': '<path d="M3 9h4l4-7 4 7h4l-3 5 1 7-6-4-6 4 1-7-3-5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="11" r="2" fill="currentColor"/>',
+  'landing-page-library': '<path d="M4 3h16c1.1 0 2 .9 2 2v14c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2zm0 5h16v10H4V8zm4-3v2h8V5H8z" fill="currentColor"/>',
+  'case-studies': '<rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 9h18M9 3v18" stroke="currentColor" stroke-width="2"/>',
+  'tools': '<circle cx="12" cy="12" r="3" fill="currentColor"/><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/>',
+  'celebrities': '<circle cx="12" cy="8" r="4" fill="currentColor"/><path d="M4 22c0-4 3.6-7 8-7s8 3 8 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+  'wechat': '<path d="M8.5 2C5 2 2 4.6 2 7.8c0 1.7.8 3.3 2.2 4.4L2 18l6.5-3.2c.6.2 1.3.3 2 .3.5 0 1-.1 1.5-.2-.3-.8-.5-1.7-.5-2.5 0-3.6 2.9-6.5 6.5-6.5.6 0 1.1.1 1.6.2C19.5 3.4 15.4 2 11 2H8.5zM18 8c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm-2 3h4v2h-4v3h-2v-3h-4v-2h4V8h2v3z" fill="currentColor"/>',
+};
 ---
 
-<HomeLayout title="Affiliate Marketing 知识库 - 从0到1的系统教程" description="面向 Affiliate Marketer 的免费知识库，包含从0到1的系统化教程、实战案例拆解、高转化Offer分析、Facebook/Google广告投放指南">
-  <!-- Hero 区域 -->
-  <section class="bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-blue-950 py-16 md:py-24 px-4">
-    <div class="container mx-auto max-w-4xl text-center">
-      <h1 class="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 leading-tight">
-        🎓 Affiliate Marketing 知识库
-      </h1>
-      <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8">
-        从0到1的系统化教程 | 实战案例拆解 | 高转化Offer分析
-      </p>
-
-      <!-- 搜索框 -->
-      <div class="mb-6">
-        <SearchBar />
+<HomeLayout title="Affiliate Marketing 知识库 - 从入门到精通的全方位学习平台" description="Affiliate Marketing 知识库提供联盟行销新手教程、Facebook/Google广告投放指南、高转化Offer分析、实战案例拆解。免费学习，从零到盈利。">
+  <div class="max-w-5xl mx-auto px-6 py-8">
+    <div>
+      <div class="py-3 flex items-center gap-2 mb-4">
+        <svg class="w-5 h-5 text-brand-500" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span class="text-lg font-bold tracking-wider text-gray-900">文章列表</span>
+        <span class="text-xs text-gray-400 ml-auto">{posts.length} 篇</span>
       </div>
 
-      <p class="text-sm text-gray-400 dark:text-gray-500">已有 60+ 篇深度内容，持续更新中</p>
-    </div>
-  </section>
+      {posts.map((p, idx) => {
+        const page = Math.floor(idx / PER_PAGE) + 1;
+        const fm = p.frontmatter;
+        const fp = p.file || '';
+        const parts = fp.split('/');
+        const col = parts[parts.length - 2] || '';
+        const slug = parts[parts.length - 1]?.replace('.md', '') || '';
+        const catLabel = catLabels[col] || '';
+        const avatarCls = avatarColors[col] || 'bg-gray-50 text-gray-600';
 
-  <!-- 核心学习模块 -->
-  <section class="container mx-auto px-4 py-12">
-    <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">📚 学习模块</h2>
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-9 gap-3">
-      {modules.map(module => <ModuleCard {...module} />)}
+        return (
+          <a href={`/${col}/${slug}/`} class={`post-item flex items-start gap-4 px-5 py-4 hover:bg-gray-50 mb-3 rounded-lg border border-gray-300 hover:border-gray-400 transition-colors${page > 1 ? ' hidden' : ''}`} data-pg={page}>
+            <div class={`h-10 w-10 flex-none rounded-lg ${avatarCls} flex items-center justify-center`}>
+              <svg class="w-5 h-5" viewBox="0 0 24 24" set:html={icons[col] || icons['beginner']}></svg>
+            </div>
+            <div class="min-w-0 flex-1">
+              <span class="text-[15px] font-semibold leading-6 text-gray-900">{fm.pinned && <span class="text-xs text-red-500 mr-1">📌</span>}{fm.title}</span>
+              <p class="mt-0.5 text-sm text-gray-500 line-clamp-2">{fm.description || ''}</p>
+              <div class="mt-1 flex items-center gap-x-3 text-xs text-gray-400">
+                <span>{catLabel}</span>
+                {fm.pubDate && <span>{new Date(fm.pubDate).toLocaleDateString('zh-CN')}</span>}
+                {fm.readTime && <span>{fm.readTime} 分钟阅读</span>}
+              </div>
+            </div>
+          </a>
+        );
+      })}
     </div>
-  </section>
 
-  <!-- 最新文章 -->
-  <section class="container mx-auto px-4 py-8">
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">📝 最新文章</h2>
-      <a href="/beginner/" class="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium">查看全部 →</a>
-    </div>
-    {latestPosts.length > 0 ? (
-      <div class="space-y-4">
-        {latestPosts.map(post => <ArticleCard post={post} />)}
-      </div>
-    ) : (
-      <p class="text-center text-gray-500 dark:text-gray-400 py-8">即将发布第一篇文章，敬请期待！</p>
+    {totalPages > 1 && (
+      <nav class="mt-10 flex items-center justify-center gap-1.5" id="pager" data-total={`${totalPages}`}>
+        <button id="prevBtn" class="h-9 w-20 flex items-center justify-center text-sm font-medium text-gray-400 bg-white border border-gray-200 rounded-lg hover:border-gray-300 hover:text-gray-600 transition-all disabled:opacity-30 disabled:cursor-not-allowed" disabled>
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>上页</button>
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map(n => (
+          <button id={`pgBtn${n}`} class={`pg-btn h-9 w-9 flex items-center justify-center text-sm font-medium rounded-lg transition-all ${n === 1 ? 'bg-blue-500 text-white shadow-sm' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'}`}>{n}</button>
+        ))}
+        <button id="nextBtn" class="h-9 w-20 flex items-center justify-center text-sm font-medium text-gray-500 bg-white border border-gray-200 rounded-lg hover:border-gray-300 hover:text-gray-700 transition-all">下页<svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></button>
+      </nav>
     )}
-  </section>
 
-  <!-- TOP Offer 精选 -->
-  {topOffersList.length > 0 && <TopOffersSection offers={topOffersList} />}
-
-  <!-- 行业大咖 -->
-  <CelebritiesSection celebrities={celebritiesList} />
-
-  <!-- 推荐联盟平台 -->
-  <TopNetworks networks={networks} />
+    <div class="mt-6 text-center text-sm text-gray-400">
+      <p>共有 {posts.length} 篇文章 · 持续更新中</p>
+    </div>
+  </div>
 </HomeLayout>
+
+<script is:inline>
+(function(){var pager=document.getElementById('pager');if(!pager)return;var p=parseInt(pager.dataset.total)||1;var t=1;var items=document.querySelectorAll('.post-item');var pb=document.getElementById('prevBtn');var nb=document.getElementById('nextBtn');
+function s(n){items.forEach(function(e){e.classList.toggle('hidden',+e.dataset.pg!==n)});for(var i=1;i<=p;i++){var b=document.getElementById('pgBtn'+i);if(b){var a=i===n;b.classList.toggle('bg-blue-500',a);b.classList.toggle('text-white',a);b.classList.toggle('shadow-sm',a);if(!a)b.classList.add('text-gray-500')}}pb&&(pb.disabled=n===1);nb&&(nb.disabled=n===p);t=n}
+for(var i=1;i<=p;i++){(function(pn){var b=document.getElementById('pgBtn'+pn);b&&b.addEventListener('click',function(){s(pn)})})(i)}
+pb&&pb.addEventListener('click',function(){t>1&&s(t-1)});
+nb&&nb.addEventListener('click',function(){t<p&&s(t+1)});
+})();</script>

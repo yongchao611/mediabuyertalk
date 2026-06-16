@@ -1,25 +1,33 @@
 ---
 import DocsLayout from '../../layouts/DocsLayout.astro';
-import ArticleCard from '../../components/ArticleCard.astro';
 
-const posts = (await Astro.glob('../../content/news/*.md'))
-  .filter(p => !p.frontmatter.draft)
-  .sort((a, b) => new Date(b.frontmatter.pubDate).getTime() - new Date(a.frontmatter.pubDate).getTime());
+const globMod = import.meta.glob('../../content/news/*.md', { eager: true });
+const posts = Object.values(globMod).filter((p: any) => !p.frontmatter.draft)
+  .sort((a: any, b: any) => new Date(b.frontmatter.pubDate || 0).getTime() - new Date(a.frontmatter.pubDate || 0).getTime());
 ---
 
-<DocsLayout title="行业动态 - Affiliate Marketing 知识库" description="Affiliate Marketing 行业最新动态和资讯">
-  <section>
-    <header class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">📰 行业动态</h1>
-      <p class="text-lg text-gray-600 dark:text-gray-400">Affiliate Marketing 行业最新动态和资讯</p>
-    </header>
-
-    {posts.length > 0 ? (
-      <div class="space-y-4">
-        {posts.map(post => <ArticleCard post={post} />)}
-      </div>
-    ) : (
-      <p class="text-center text-gray-500 py-12">即将更新，敬请期待</p>
-    )}
-  </section>
+<DocsLayout title="news" description="">
+  <div>
+    {posts.map(p => {
+      const fm = p.frontmatter;
+      const fp = p.file || '';
+      const parts = fp.split('/');
+      const slug = parts[parts.length - 1]?.replace('.md', '') || '';
+      return (
+        <a href={`/$col/${slug}/`} class="flex items-start gap-4 px-5 py-4 hover:bg-gray-50 mb-3 rounded-lg border border-gray-300 hover:border-gray-400 transition-colors">
+          <div class="h-10 w-10 flex-none rounded-lg bg-gray-50 text-gray-600 flex items-center justify-center">
+            <svg class="w-5 h-5" viewBox="0 0 24 24"><path d="M4 4h16v16H4V4zm2 4h12v2H6V8zm0 4h8v2H6v-2z" fill="currentColor"/></svg>
+          </div>
+          <div class="min-w-0 flex-1">
+            <span class="text-[15px] font-semibold text-gray-900">{fm.title}</span>
+            <p class="mt-0.5 text-sm text-gray-500 line-clamp-2">{fm.description || ''}</p>
+            <div class="mt-1 flex items-center gap-x-3 text-xs text-gray-400">
+              {fm.author && <span>{fm.author}</span>}
+              {fm.pubDate && <span>{new Date(fm.pubDate).toLocaleDateString('zh-CN')}</span>}
+            </div>
+          </div>
+        </a>
+      );
+    })}
+  </div>
 </DocsLayout>

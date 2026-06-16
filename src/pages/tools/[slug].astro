@@ -2,11 +2,14 @@
 import DocsLayout from '../../layouts/DocsLayout.astro';
 
 export async function getStaticPaths() {
-  const posts = await Astro.glob('../../content/tools/*.md');
-  return posts.map(post => ({
-    params: { slug: post.file.split('/').pop()?.replace('.md', '') },
-    props: { post },
+  const modules = import.meta.glob('../../content/tools/*.md');
+  const entries = Object.entries(modules);
+  if (entries.length === 0) return [];
+  const posts = await Promise.all(entries.map(async ([file, loader]) => {
+    const post: any = await loader();
+    return { ...post, file };
   }));
+  return posts.map((post: any) => ({ params: { slug: post.file.split('/').pop()?.replace('.md', '') }, props: { post } }));
 }
 
 const { post } = Astro.props;
@@ -14,40 +17,7 @@ const { frontmatter } = post;
 const { Content } = post;
 ---
 
-<DocsLayout
-  title={`${frontmatter.title} - 工具导航 - Affiliate Marketing 知识库`}
-  description={frontmatter.seo_description || frontmatter.description || frontmatter.title}
-  pubDate={frontmatter.pubDate}
-  readTime={frontmatter.readTime}
-  category="tools"
->
-  <!-- 工具信息卡片 -->
-  <div class="flex flex-wrap items-center gap-3 mb-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
-    {frontmatter.icon && <span class="text-3xl">{frontmatter.icon}</span>}
-    <div>
-      <div class="flex items-center gap-2">
-        {frontmatter.rating && (
-          <span class="text-yellow-400">{'⭐'.repeat(Math.floor(frontmatter.rating))} <span class="text-gray-500 text-sm">{frontmatter.rating}</span></span>
-        )}
-      </div>
-      <div class="flex gap-2 mt-1">
-        {frontmatter.price && (
-          <span class="text-xs px-2 py-0.5 rounded bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">{frontmatter.price === 'free' ? '免费' : frontmatter.price === 'freemium' ? '免费增值' : '付费'}</span>
-        )}
-        {frontmatter.category && (
-          <span class="text-xs px-2 py-0.5 rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300">{frontmatter.category}</span>
-        )}
-      </div>
-    </div>
-    {frontmatter.website_url && (
-      <a href={frontmatter.website_url} target="_blank" rel="nofollow noopener" class="ml-auto px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">
-        访问官网 →
-      </a>
-    )}
-  </div>
-
-  {frontmatter.image && (
-    <img src={frontmatter.image} alt={frontmatter.title} class="w-full h-64 object-cover rounded-xl mb-6" />
-  )}
+<DocsLayout title={frontmatter.title} description={frontmatter.description || frontmatter.title} pubDate={frontmatter.pubDate} readTime={frontmatter.readTime} category="tools">
+  {frontmatter.image && <img src={frontmatter.image} alt={frontmatter.title} class="w-full max-h-80 object-cover rounded-xl mb-6" />}
   <Content />
 </DocsLayout>

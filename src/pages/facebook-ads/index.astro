@@ -1,25 +1,33 @@
 ---
 import DocsLayout from '../../layouts/DocsLayout.astro';
-import ArticleCard from '../../components/ArticleCard.astro';
 
-const posts = (await Astro.glob('../../content/facebook-ads/*.md'))
-  .filter(p => !p.frontmatter.draft)
-  .sort((a, b) => new Date(b.frontmatter.pubDate).getTime() - new Date(a.frontmatter.pubDate).getTime());
+const globMod = import.meta.glob('../../content/facebook-ads/*.md', { eager: true });
+const posts = Object.values(globMod).filter((p: any) => !p.frontmatter.draft)
+  .sort((a: any, b: any) => new Date(b.frontmatter.pubDate || 0).getTime() - new Date(a.frontmatter.pubDate || 0).getTime());
 ---
 
-<DocsLayout title="Facebook Ads - Affiliate Marketing 知识库" description="Facebook 广告投放完整攻略，包含账户安全、受众定位、广告结构、ABO vs CBO 等">
-  <section>
-    <header class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">📘 Facebook Ads</h1>
-      <p class="text-lg text-gray-600 dark:text-gray-400">Facebook 广告投放的完整攻略，从账户安全到高级优化策略</p>
-    </header>
-
-    {posts.length > 0 ? (
-      <div class="space-y-4">
-        {posts.map(post => <ArticleCard post={post} />)}
-      </div>
-    ) : (
-      <p class="text-center text-gray-500 py-12">即将更新，敬请期待</p>
-    )}
-  </section>
+<DocsLayout title="facebook-ads" description="">
+  <div>
+    {posts.map(p => {
+      const fm = p.frontmatter;
+      const fp = p.file || '';
+      const parts = fp.split('/');
+      const slug = parts[parts.length - 1]?.replace('.md', '') || '';
+      return (
+        <a href={`/$col/${slug}/`} class="flex items-start gap-4 px-5 py-4 hover:bg-gray-50 mb-3 rounded-lg border border-gray-300 hover:border-gray-400 transition-colors">
+          <div class="h-10 w-10 flex-none rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+            <svg class="w-5 h-5" viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z" fill="currentColor"/></svg>
+          </div>
+          <div class="min-w-0 flex-1">
+            <span class="text-[15px] font-semibold text-gray-900">{fm.title}</span>
+            <p class="mt-0.5 text-sm text-gray-500 line-clamp-2">{fm.description || ''}</p>
+            <div class="mt-1 flex items-center gap-x-3 text-xs text-gray-400">
+              {fm.author && <span>{fm.author}</span>}
+              {fm.pubDate && <span>{new Date(fm.pubDate).toLocaleDateString('zh-CN')}</span>}
+            </div>
+          </div>
+        </a>
+      );
+    })}
+  </div>
 </DocsLayout>

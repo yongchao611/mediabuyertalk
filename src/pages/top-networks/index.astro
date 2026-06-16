@@ -1,7 +1,7 @@
 ---
 import DocsLayout from '../../layouts/DocsLayout.astro';
 
-const networks = (await Astro.glob('../../content/top-networks/*.md'))
+const globMod = import.meta.glob('../../content/top-networks/*.md', { eager: true }); const networks = Object.values(globMod)
   .filter(p => !p.frontmatter.draft)
   .sort((a, b) => new Date(b.frontmatter.pubDate || 0).getTime() - new Date(a.frontmatter.pubDate || 0).getTime());
 ---

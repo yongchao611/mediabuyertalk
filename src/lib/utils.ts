@@ -1,4 +1,19 @@
 /**
+ * 安全 Astro.glob - 目录为空时返回 [] 而不是报错
+ */
+export async function safeGlob(pattern: string): Promise<any[]> {
+  try {
+    const result = await (Astro as any).glob(pattern);
+    return Array.isArray(result) ? result : [];
+  } catch (e: any) {
+    if (e?.message?.includes('AstroGlobNoMatch') || e?.name === 'AstroGlobNoMatch') {
+      return [];
+    }
+    throw e;
+  }
+}
+
+/**
  * 格式化日期为中文格式
  */
 export function formatDate(date: Date | string): string {

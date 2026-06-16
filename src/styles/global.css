@@ -8,172 +8,53 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-
   body {
-    @apply bg-white text-gray-900 font-sans;
+    @apply bg-gray-50 text-gray-900;
+    font-family: "Microsoft YaHei", "微软雅黑", system-ui, -apple-system, sans-serif;
   }
-
   .dark body {
-    @apply bg-gray-950 text-gray-100;
-  }
-
-  /* 自定义滚动条 */
-  ::-webkit-scrollbar {
-    width: 8px;
-  }
-  ::-webkit-scrollbar-track {
-    @apply bg-gray-100;
-  }
-  ::-webkit-scrollbar-thumb {
-    @apply bg-gray-300 rounded-full;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    @apply bg-gray-400;
+    @apply bg-neutral-950 text-gray-100;
   }
 }
 
 @layer components {
-  /* 文章内容样式 */
+  /* 文章内容样式 - 保持详情页可读性 */
   .prose-custom {
     @apply text-gray-700 leading-relaxed;
   }
-  .prose-custom h1 {
-    @apply text-3xl font-bold text-gray-900 mt-8 mb-4;
-  }
-  .prose-custom h2 {
-    @apply text-2xl font-bold text-gray-900 mt-8 mb-4 pb-2 border-b border-gray-200;
-  }
-  .prose-custom h3 {
-    @apply text-xl font-semibold text-gray-900 mt-6 mb-3;
-  }
-  .prose-custom h4 {
-    @apply text-lg font-semibold text-gray-900 mt-4 mb-2;
-  }
-  .prose-custom p {
-    @apply mb-4;
-  }
-  .prose-custom ul,
-  .prose-custom ol {
-    @apply mb-4 pl-6;
-  }
-  .prose-custom ul {
-    @apply list-disc;
-  }
-  .prose-custom ol {
-    @apply list-decimal;
-  }
-  .prose-custom li {
-    @apply mb-2;
-  }
-  .prose-custom a {
-    @apply text-blue-600 hover:text-blue-800 underline;
-  }
-  .prose-custom blockquote {
-    @apply border-l-4 border-blue-500 bg-blue-50 pl-4 py-2 my-4 italic text-gray-600;
-  }
-  .prose-custom code {
-    @apply bg-gray-100 text-pink-600 px-1.5 py-0.5 rounded text-sm font-mono;
-  }
-  .prose-custom pre {
-    @apply bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-4;
-  }
-  .prose-custom pre code {
-    @apply bg-transparent text-gray-100 px-0 py-0;
-  }
-  .prose-custom table {
-    @apply w-full border-collapse mb-4;
-  }
-  .prose-custom th {
-    @apply bg-gray-100 text-left px-4 py-2 border border-gray-300 font-semibold;
-  }
-  .prose-custom td {
-    @apply px-4 py-2 border border-gray-300;
-  }
-  .prose-custom img {
-    @apply max-w-full h-auto rounded-lg my-4;
-  }
-  .prose-custom strong {
-    @apply font-bold text-gray-900;
-  }
+  .prose-custom h1 { @apply hidden; }
+  .prose-custom h2 { @apply text-xl font-bold text-gray-900 mt-8 mb-4 pb-2 border-b border-gray-200; }
+  .prose-custom h3 { @apply text-lg font-semibold text-gray-900 mt-6 mb-3; }
+  .prose-custom p { @apply mb-4; }
+  .prose-custom ul, .prose-custom ol { @apply mb-4 pl-6; }
+  .prose-custom ul { @apply list-disc; }
+  .prose-custom ol { @apply list-decimal; }
+  .prose-custom li { @apply mb-2; }
+  .prose-custom a { @apply text-blue-600 hover:text-blue-800 underline; }
+  .prose-custom blockquote { @apply border-l-4 border-gray-300 pl-4 py-1 my-4 text-gray-600; }
+  .prose-custom code { @apply bg-gray-100 text-pink-600 px-1.5 py-0.5 rounded text-sm font-mono; }
+  .prose-custom pre { @apply bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-4; }
+  .prose-custom pre code { @apply bg-transparent text-gray-100 px-0 py-0; }
+  .prose-custom table { @apply w-full border-collapse mb-4; }
+  .prose-custom th { @apply bg-gray-50 text-left px-4 py-2 border-b border-gray-200 font-semibold text-sm; }
+  .prose-custom td { @apply px-4 py-2 border-b border-gray-100 text-sm; }
+  .prose-custom img { @apply max-w-full h-auto rounded my-4; }
+  .prose-custom strong { @apply font-bold text-gray-900; }
 
-  /* 卡片悬浮效果 */
-  .card-hover {
-    @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5;
-  }
+  /* 暗色模式 */
+  .dark .prose-custom { @apply text-gray-300; }
+  .dark .prose-custom h1, .dark .prose-custom h2, .dark .prose-custom h3, .dark .prose-custom h4 { @apply text-gray-100; }
+  .dark .prose-custom h2 { @apply border-gray-800; }
+  .dark .prose-custom blockquote { @apply border-gray-600 text-gray-400; }
+  .dark .prose-custom code { @apply bg-gray-800 text-pink-400; }
+  .dark .prose-custom th { @apply bg-gray-900 border-gray-800; }
+  .dark .prose-custom td { @apply border-gray-800; }
+  .dark .prose-custom strong { @apply text-gray-100; }
 
-  /* 标签样式 */
-  .tag {
-    @apply inline-block text-xs font-medium px-2.5 py-1 rounded-full;
-  }
-
-  .tag-blue {
-    @apply bg-blue-100 text-blue-700;
-  }
-  .tag-green {
-    @apply bg-green-100 text-green-700;
-  }
-  .tag-orange {
-    @apply bg-orange-100 text-orange-700;
-  }
-  .tag-purple {
-    @apply bg-purple-100 text-purple-700;
-  }
-  .tag-red {
-    @apply bg-red-100 text-red-700;
-  }
-  .tag-pink {
-    @apply bg-pink-100 text-pink-700;
-  }
-  .tag-indigo {
-    @apply bg-indigo-100 text-indigo-700;
-  }
-
-  /* 线限制 */
-  .line-clamp-1 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-  }
   .line-clamp-2 {
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
-  }
-  .line-clamp-3 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-  }
-
-  /* 暗色模式适配 */
-  .dark .prose-custom {
-    @apply text-gray-300;
-  }
-  .dark .prose-custom h1,
-  .dark .prose-custom h2,
-  .dark .prose-custom h3,
-  .dark .prose-custom h4 {
-    @apply text-gray-100;
-  }
-  .dark .prose-custom h2 {
-    @apply border-gray-700;
-  }
-  .dark .prose-custom blockquote {
-    @apply border-blue-400 bg-gray-800 text-gray-300;
-  }
-  .dark .prose-custom code {
-    @apply bg-gray-800 text-pink-400;
-  }
-  .dark .prose-custom th {
-    @apply bg-gray-800 border-gray-600;
-  }
-  .dark .prose-custom td {
-    @apply border-gray-600;
-  }
-  .dark .prose-custom strong {
-    @apply text-gray-100;
   }
 }

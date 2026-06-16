@@ -2,11 +2,14 @@
 import DocsLayout from '../../layouts/DocsLayout.astro';
 
 export async function getStaticPaths() {
-  const posts = await Astro.glob('../../content/google-ads/*.md');
-  return posts.map(post => ({
-    params: { slug: post.file.split('/').pop()?.replace('.md', '') },
-    props: { post },
+  const modules = import.meta.glob('../../content/google-ads/*.md');
+  const entries = Object.entries(modules);
+  if (entries.length === 0) return [];
+  const posts = await Promise.all(entries.map(async ([file, loader]) => {
+    const post: any = await loader();
+    return { ...post, file };
   }));
+  return posts.map((post: any) => ({ params: { slug: post.file.split('/').pop()?.replace('.md', '') }, props: { post } }));
 }
 
 const { post } = Astro.props;
@@ -14,15 +17,7 @@ const { frontmatter } = post;
 const { Content } = post;
 ---
 
-<DocsLayout
-  title={`${frontmatter.title} - Google Ads - Affiliate Marketing 知识库`}
-  description={frontmatter.seo_description || frontmatter.description || frontmatter.title}
-  pubDate={frontmatter.pubDate}
-  readTime={frontmatter.readTime}
-  category="google-ads"
->
-  {frontmatter.image && (
-    <img src={frontmatter.image} alt={frontmatter.title} class="w-full h-64 object-cover rounded-xl mb-6" />
-  )}
+<DocsLayout title={frontmatter.title} description={frontmatter.description || frontmatter.title} pubDate={frontmatter.pubDate} readTime={frontmatter.readTime} category="google-ads">
+  {frontmatter.image && <img src={frontmatter.image} alt={frontmatter.title} class="w-full max-h-80 object-cover rounded-xl mb-6" />}
   <Content />
 </DocsLayout>
