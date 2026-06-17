@@ -2,7 +2,7 @@
 pinned: false
 title: 国外日付广告联盟介绍-Golden Goose
 pubDate: 2025-08-21
-author: Simon611
+author: AFF超人不会飞
 ---
 Golden Goose跟其他大联盟相比，成立时间不是很长，但也已经好几年历史了，是一家主要侧重mVAS（mobile Value added services) offer 的公司，在莫斯科和迈阿密有办公室。mVAS offer主要的转化流程包括1 click flow,2 click flows 和click2SMS，并且有超过1万的affiliates，每日有超过65000的转化量。
 

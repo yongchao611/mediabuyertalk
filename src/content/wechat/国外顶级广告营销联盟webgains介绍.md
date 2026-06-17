@@ -2,7 +2,7 @@
 pinned: false
 title: 国外顶级广告营销联盟Webgains介绍
 pubDate: 2026-06-17
-author: Simon611
+author: AFF超人不会飞
 ---
 Webgains于2005年成立，总部在英国伦敦，2006年被Pepper媒体集团收购成为上市公司，专注联盟营销15年。总部在伦敦，同时在慕尼黑、巴黎、马德里等6大城市设办事处，业务覆盖195个国家。
 

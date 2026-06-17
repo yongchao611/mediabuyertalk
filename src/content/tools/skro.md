@@ -1,6 +1,6 @@
 ---
 pubDate: 2026-06-16
-author: Simon611
+author: AFF超人不会飞
 title: Skro
 icon: /images/skro.png
 website_url: https://skro.eu
