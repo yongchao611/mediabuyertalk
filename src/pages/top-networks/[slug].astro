@@ -14,10 +14,38 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { frontmatter } = post;
-const { Content } = post;
 ---
 
-<DocsLayout title={frontmatter.title} description={frontmatter.description || frontmatter.title} pubDate={frontmatter.pubDate} readTime={frontmatter.readTime} category="top-networks">
-  {frontmatter.image && <img src={frontmatter.image} alt={frontmatter.title} class="w-full max-h-80 object-cover rounded-xl mb-6" />}
-  <Content />
+<DocsLayout title={frontmatter.title} description={frontmatter.description || frontmatter.title} category="top-networks">
+  <!-- Logo + 名称 -->
+  <div class="flex items-center gap-4 mb-6">
+    {frontmatter.icon ? (
+      <img src={frontmatter.icon} alt={frontmatter.title} class="w-16 h-16 rounded-xl object-cover border border-gray-200" />
+    ) : (
+      <span class="w-16 h-16 rounded-xl bg-gray-100 flex items-center justify-center text-2xl">🏆</span>
+    )}
+    <div>
+      <h2 class="text-xl font-bold text-gray-900">{frontmatter.title}</h2>
+      {frontmatter.description && <p class="text-gray-500 mt-1">{frontmatter.description}</p>}
+    </div>
+  </div>
+
+  <!-- 关键信息 -->
+  <div class="grid grid-cols-2 gap-4 mb-6">
+    <div class="bg-green-50 rounded-xl p-4 text-center">
+      <div class="text-2xl font-bold text-green-600">{frontmatter.min_payout || '-'}</div>
+      <div class="text-sm text-gray-500 mt-1">起付金额</div>
+    </div>
+    <div class="bg-blue-50 rounded-xl p-4 text-center">
+      <div class="text-2xl font-bold text-blue-600">{frontmatter.payment_frequency || '-'}</div>
+      <div class="text-sm text-gray-500 mt-1">支付周期</div>
+    </div>
+  </div>
+
+  <!-- 注册按钮 -->
+  {frontmatter.signup_url && (
+    <a href={frontmatter.signup_url} target="_blank" rel="nofollow noopener" class="block w-full text-center py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl transition-colors mb-8">
+      立即注册 →
+    </a>
+  )}
 </DocsLayout>
