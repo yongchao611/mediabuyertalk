@@ -58,9 +58,10 @@ CMS.init({config:{
       {label:'正文',name:'body',widget:'markdown'}
     ]},
     {name:'tools',label:'工具导航',label_singular:'工具',folder:'src/content/tools',create:true,slug:'{{slug}}',fields:[
-      {label:'工具名称',name:'title',widget:'string'},{label:'发布日期',name:'pubDate',widget:'datetime',format:'YYYY-MM-DD',time_format:false,default:''},
-      {label:'作者',name:'author',widget:'string',default:'Simon611'},{label:'封面图片',name:'image',widget:'image',required:false},
-      {label:'正文',name:'body',widget:'markdown'}
+      {label:'工具名称',name:'title',widget:'string'},{label:'Logo图标',name:'icon',widget:'image',required:false,hint:'上传Logo'},
+      {label:'简短描述',name:'description',widget:'text',hint:'一句话介绍'},
+      {label:'分类',name:'category',widget:'select',options:['tracking','lp-builder','ai','creative','research','spy','hosting','other']},
+      {label:'官网链接',name:'website_url',widget:'string'}
     ]},
     {name:'landing-page-library',label:'LP库',label_singular:'LP',folder:'src/content/landing-page-library',create:true,slug:'{{slug}}',fields:[
       {label:'置顶',name:'pinned',widget:'boolean',default:false,required:false},{label:'标题',name:'title',widget:'string'},
