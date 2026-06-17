@@ -9,7 +9,8 @@
     "dev:all": "concurrently \"npm run dev\" \"npm run cms\"",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "push": "git add -A && git commit -m \"更新\" && git push origin master && npx vercel deploy --prod"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.6.1",
