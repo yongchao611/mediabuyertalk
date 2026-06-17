@@ -42,8 +42,8 @@ tools.forEach(t => {
                   const fm = tool.frontmatter;
                   return (
                     <div class="flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors">
-                      {fm.icon ? (
-                        <img src={fm.icon} alt={fm.title} class="w-10 h-10 rounded-lg object-cover border border-gray-100 flex-shrink-0" />
+                      {fm.icon || fm.image ? (
+                        <img src={fm.icon || fm.image} alt={fm.title} class="w-10 h-10 rounded-lg object-cover border border-gray-100 flex-shrink-0" />
                       ) : (
                         <span class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center text-lg flex-shrink-0">🛠️</span>
                       )}
