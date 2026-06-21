@@ -14,7 +14,7 @@ const posts = Object.values(globMod).filter((p: any) => !p.frontmatter.draft)
       const parts = fp.split('/');
       const slug = parts[parts.length - 1]?.replace('.md', '') || '';
       return (
-        <a href={`/$col/${slug}/`} class="flex items-start gap-4 px-5 py-4 hover:bg-gray-50 mb-3 rounded-lg border border-gray-300 hover:border-gray-400 transition-colors">
+        <a href={`/news/${slug}/`} class="flex items-start gap-4 px-5 py-4 hover:bg-gray-50 mb-3 rounded-lg border border-gray-300 hover:border-gray-400 transition-colors">
           <div class="h-10 w-10 flex-none rounded-lg bg-gray-50 text-gray-600 flex items-center justify-center">
             <svg class="w-5 h-5" viewBox="0 0 24 24"><path d="M4 4h16v16H4V4zm2 4h12v2H6V8zm0 4h8v2H6v-2z" fill="currentColor"/></svg>
           </div>
