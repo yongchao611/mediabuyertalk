@@ -39,6 +39,7 @@ const { title, description, pubDate, readTime, category } = Astro.props;
           <div class="flex items-center gap-3 text-sm text-gray-400 dark:text-gray-500">
             {pubDate && <span>{new Date(pubDate).toLocaleDateString('zh-CN')}</span>}
             {readTime && <span>{readTime} 分钟阅读</span>}
+            <span data-article-slug={Astro.url.pathname.replace(/\/$/, '').split('/').pop()} data-base-views="0">👁 ...</span>
           </div>
         </header>
 

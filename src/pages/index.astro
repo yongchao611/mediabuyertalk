@@ -81,7 +81,7 @@ const icons: Record<string, string> = {
               <div class="mt-1 flex items-center gap-x-3 text-xs text-gray-400">
                 <span>{catLabel}</span>
                 {fm.pubDate && <span>{new Date(fm.pubDate).toLocaleDateString('zh-CN')}</span>}
-                {fm.readTime && <span>{fm.readTime} 分钟阅读</span>}
+                <span data-article-slug={slug} data-base-views="0"></span>
               </div>
             </div>
           </a>
