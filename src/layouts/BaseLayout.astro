@@ -26,8 +26,7 @@ const {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
-    <script src="/counter.js" defer></script>
-
+    
     <!-- Open Graph -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -68,5 +67,8 @@ const {
   </head>
   <body class="min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 flex flex-col">
     <slot />
+    <script>
+      (function(){var e=document.querySelectorAll('[data-article-slug]');for(var i=0;i<e.length;i++){var el=e[i];var s=el.getAttribute('data-article-slug');var k='v_'+s;var c=parseInt(localStorage.getItem(k)||'0',10);var b=parseInt(el.getAttribute('data-base-views')||'0',10);if(!sessionStorage.getItem('s_'+s)){c++;localStorage.setItem(k,c);sessionStorage.setItem('s_'+s,'1')}el.textContent='👁 '+(b+c)+' 次阅读'}})();
+    </script>
   </body>
 </html>
