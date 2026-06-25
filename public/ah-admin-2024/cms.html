@@ -16,6 +16,12 @@ CMS.init({config:{
       {label:'作者',name:'author',widget:'string',default:'AFF超人不会飞'},{label:'封面图片',name:'image',widget:'image',required:false},
       {label:'正文',name:'body',widget:'markdown'}
     ]},
+    {name:'rebate',label:'返利网',label_singular:'文章',folder:'src/content/rebate',create:true,slug:'{{slug}}',fields:[
+      {label:'置顶',name:'pinned',widget:'boolean',default:false,required:false},
+      {label:'标题',name:'title',widget:'string'},{label:'发布日期',name:'pubDate',widget:'datetime',format:'YYYY-MM-DD',time_format:false,default:''},
+      {label:'作者',name:'author',widget:'string',default:'AFF超人不会飞'},{label:'封面图片',name:'image',widget:'image',required:false},
+      {label:'正文',name:'body',widget:'markdown'}
+    ]},
     {name:'facebook-ads',label:'Facebook Ads',label_singular:'文章',folder:'src/content/facebook-ads',create:true,slug:'{{slug}}',fields:[
       {label:'置顶',name:'pinned',widget:'boolean',default:false,required:false},{label:'标题',name:'title',widget:'string'},
       {label:'发布日期',name:'pubDate',widget:'datetime',format:'YYYY-MM-DD',time_format:false,default:''},
