@@ -16,7 +16,7 @@ CMS.init({config:{
       {label:'发布日期',name:'pubDate',widget:'datetime',format:'YYYY-MM-DD',time_format:false,default:''},
       {label:'作者',name:'author',widget:'string',default:'AFF超人不会飞'},
       {label:'封面图片',name:'image',widget:'image',required:false},
-      {label:'正文',name:'body',widget:'markdown'}
+      {label:'正文',name:'body',widget:'markdown',modes:['raw','rich_text']}
     ]},
     {name:'rebate',label:'返利网',label_singular:'文章',folder:'src/content/rebate',create:true,slug:'{{slug}}',fields:[
       {label:'置顶',name:'pinned',widget:'boolean',default:false,required:false},
@@ -24,7 +24,7 @@ CMS.init({config:{
       {label:'发布日期',name:'pubDate',widget:'datetime',format:'YYYY-MM-DD',time_format:false,default:''},
       {label:'作者',name:'author',widget:'string',default:'AFF超人不会飞'},
       {label:'封面图片',name:'image',widget:'image',required:false},
-      {label:'正文',name:'body',widget:'markdown'}
+      {label:'正文',name:'body',widget:'markdown',modes:['raw','rich_text']}
     ]},
     {name:'automation-tools',label:'自动化工具',label_singular:'文章',folder:'src/content/automation-tools',create:true,slug:'{{slug}}',fields:[
       {label:'置顶',name:'pinned',widget:'boolean',default:false,required:false},
@@ -32,7 +32,7 @@ CMS.init({config:{
       {label:'发布日期',name:'pubDate',widget:'datetime',format:'YYYY-MM-DD',time_format:false,default:''},
       {label:'作者',name:'author',widget:'string',default:'AFF超人不会飞'},
       {label:'封面图片',name:'image',widget:'image',required:false},
-      {label:'正文',name:'body',widget:'markdown'}
+      {label:'正文',name:'body',widget:'markdown',modes:['raw','rich_text']}
     ]},
     {name:'facebook-ads',label:'Facebook Ads',label_singular:'文章',folder:'src/content/facebook-ads',create:true,slug:'{{slug}}',fields:[
       {label:'置顶',name:'pinned',widget:'boolean',default:false,required:false},
@@ -40,7 +40,7 @@ CMS.init({config:{
       {label:'发布日期',name:'pubDate',widget:'datetime',format:'YYYY-MM-DD',time_format:false,default:''},
       {label:'作者',name:'author',widget:'string',default:'AFF超人不会飞'},
       {label:'封面图片',name:'image',widget:'image',required:false},
-      {label:'正文',name:'body',widget:'markdown'}
+      {label:'正文',name:'body',widget:'markdown',modes:['raw','rich_text']}
     ]},
     {name:'google-ads',label:'Google Ads',label_singular:'文章',folder:'src/content/google-ads',create:true,slug:'{{slug}}',fields:[
       {label:'置顶',name:'pinned',widget:'boolean',default:false,required:false},
@@ -48,7 +48,7 @@ CMS.init({config:{
       {label:'发布日期',name:'pubDate',widget:'datetime',format:'YYYY-MM-DD',time_format:false,default:''},
       {label:'作者',name:'author',widget:'string',default:'AFF超人不会飞'},
       {label:'封面图片',name:'image',widget:'image',required:false},
-      {label:'正文',name:'body',widget:'markdown'}
+      {label:'正文',name:'body',widget:'markdown',modes:['raw','rich_text']}
     ]},
     {name:'top-offers',label:'TOP Offer',label_singular:'Offer',folder:'src/content/top-offers',create:true,slug:'{{slug}}',fields:[
       {label:'置顶',name:'pinned',widget:'boolean',default:false,required:false},
@@ -56,7 +56,7 @@ CMS.init({config:{
       {label:'发布日期',name:'pubDate',widget:'datetime',format:'YYYY-MM-DD',time_format:false,default:''},
       {label:'作者',name:'author',widget:'string',default:'AFF超人不会飞'},
       {label:'封面图片',name:'image',widget:'image',required:false},
-      {label:'正文',name:'body',widget:'markdown'}
+      {label:'正文',name:'body',widget:'markdown',modes:['raw','rich_text']}
     ]},
     {name:'top-networks',label:'TOP联盟',label_singular:'联盟',folder:'src/content/top-networks',create:true,slug:'{{slug}}',fields:[
       {label:'联盟名称',name:'title',widget:'string'},
@@ -71,7 +71,7 @@ CMS.init({config:{
       {label:'发布日期',name:'pubDate',widget:'datetime',format:'YYYY-MM-DD',time_format:false,default:''},
       {label:'作者',name:'author',widget:'string',default:'AFF超人不会飞'},
       {label:'封面图片',name:'image',widget:'image',required:false},
-      {label:'正文',name:'body',widget:'markdown'}
+      {label:'正文',name:'body',widget:'markdown',modes:['raw','rich_text']}
     ]},
     {name:'wechat',label:'公众号文章',label_singular:'文章',folder:'src/content/wechat',create:true,slug:'{{slug}}',fields:[
       {label:'置顶',name:'pinned',widget:'boolean',default:false,required:false},
@@ -79,7 +79,7 @@ CMS.init({config:{
       {label:'发布日期',name:'pubDate',widget:'datetime',format:'YYYY-MM-DD',time_format:false,default:''},
       {label:'作者',name:'author',widget:'string',default:'AFF超人不会飞'},
       {label:'封面图片',name:'image',widget:'image',required:false},
-      {label:'正文',name:'body',widget:'markdown'}
+      {label:'正文',name:'body',widget:'markdown',modes:['raw','rich_text']}
     ]},
     {name:'case-studies',label:'实战案例',label_singular:'案例',folder:'src/content/case-studies',create:true,slug:'{{slug}}',fields:[
       {label:'置顶',name:'pinned',widget:'boolean',default:false,required:false},
@@ -87,7 +87,7 @@ CMS.init({config:{
       {label:'发布日期',name:'pubDate',widget:'datetime',format:'YYYY-MM-DD',time_format:false,default:''},
       {label:'作者',name:'author',widget:'string',default:'AFF超人不会飞'},
       {label:'封面图片',name:'image',widget:'image',required:false},
-      {label:'正文',name:'body',widget:'markdown'}
+      {label:'正文',name:'body',widget:'markdown',modes:['raw','rich_text']}
     ]},
     {name:'tools',label:'工具导航',label_singular:'工具',folder:'src/content/tools',create:true,slug:'{{slug}}',fields:[
       {label:'工具名称',name:'title',widget:'string'},
@@ -103,7 +103,7 @@ CMS.init({config:{
       {label:'作者',name:'author',widget:'string',default:'AFF超人不会飞'},
       {label:'封面图片',name:'image',widget:'image',required:false},
       {label:'LP压缩包(.zip)',name:'download_file',widget:'file',required:false,hint:'上传ZIP'},
-      {label:'正文',name:'body',widget:'markdown'}
+      {label:'正文',name:'body',widget:'markdown',modes:['raw','rich_text']}
     ]}
   ]
 }});
