@@ -16,7 +16,7 @@ const posts = Object.values(globMod).filter((p: any) => !p.frontmatter.draft)
       return (
         <a href={`/beginner/${slug}/`} class="flex items-start gap-4 px-5 py-4 hover:bg-gray-50 mb-3 rounded-lg border border-gray-300 hover:border-gray-400 transition-colors">
           <div class="h-10 w-10 flex-none rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
-            <svg class="w-5 h-5" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-6H9v-2h4v8h-2zm1-10a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" fill="currentColor"/></svg>
+            <svg class="w-5 h-5" viewBox="0 0 24 24"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5-1.17 0-2.39.15-3.5.5v15c1.11-.35 2.33-.5 3.5-.5 1.95 0 4.05.4 5.5 1.5 1.45-1.1 3.55-1.5 5.5-1.5 1.17 0 2.39.15 3.5.5V5z" fill="currentColor"/></svg>
           </div>
           <div class="min-w-0 flex-1">
             <span class="text-[15px] font-semibold text-gray-900">{fm.title}</span>
