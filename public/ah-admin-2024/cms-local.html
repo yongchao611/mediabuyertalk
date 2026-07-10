@@ -10,6 +10,14 @@ CMS.init({config:{
   local_backend:true,
   media_folder:'public/images',public_folder:'/images',locale:'zh_Hans',
   collections:[
+    {name:'contact',label:'联系作者',label_singular:'文章',folder:'src/content/contact',create:true,slug:'{{slug}}',fields:[
+      {label:'置顶',name:'pinned',widget:'boolean',default:false,required:false},
+      {label:'标题',name:'title',widget:'string'},
+      {label:'发布日期',name:'pubDate',widget:'datetime',format:'YYYY-MM-DD',time_format:false,default:''},
+      {label:'作者',name:'author',widget:'string',default:'AFF超人不会飞'},
+      {label:'封面图片',name:'image',widget:'image',required:false},
+      {label:'正文',name:'body',widget:'markdown',modes:['raw','rich_text']}
+    ]},
     {name:'beginner',label:'新手入门',label_singular:'文章',folder:'src/content/beginner',create:true,slug:'{{slug}}',fields:[
       {label:'置顶',name:'pinned',widget:'boolean',default:false,required:false},
       {label:'标题',name:'title',widget:'string'},

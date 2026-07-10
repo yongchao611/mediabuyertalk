@@ -1,0 +1,33 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+
+const globMod = import.meta.glob('../../content/contact/*.md', { eager: true });
+const posts = Object.values(globMod).filter((p: any) => !p.frontmatter.draft)
+  .sort((a: any, b: any) => new Date(b.frontmatter.pubDate || 0).getTime() - new Date(a.frontmatter.pubDate || 0).getTime());
+---
+
+<DocsLayout title="联系作者" description="">
+  <div>
+    {posts.map(p => {
+      const fm = p.frontmatter;
+      const fp = p.file || '';
+      const parts = fp.split('/');
+      const slug = parts[parts.length - 1]?.replace('.md', '') || '';
+      return (
+        <a href={`/contact/${slug}/`} class="flex items-start gap-4 px-5 py-4 hover:bg-gray-50 mb-3 rounded-lg border border-gray-300 hover:border-gray-400 transition-colors">
+          <div class="h-10 w-10 flex-none rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center">
+            <svg class="w-5 h-5" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" fill="currentColor"/></svg>
+          </div>
+          <div class="min-w-0 flex-1">
+            <span class="text-[15px] font-semibold text-gray-900">{fm.title}</span>
+            <p class="mt-0.5 text-sm text-gray-500 line-clamp-2">{fm.description || ''}</p>
+            <div class="mt-1 flex items-center gap-x-3 text-xs text-gray-400">
+              {fm.author && <span>{fm.author}</span>}
+              {fm.pubDate && <span>{new Date(fm.pubDate).toLocaleDateString('zh-CN')}</span>}
+            </div>
+          </div>
+        </a>
+      );
+    })}
+  </div>
+</DocsLayout>
